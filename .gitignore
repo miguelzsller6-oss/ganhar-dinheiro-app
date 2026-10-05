@@ -1,0 +1,9 @@
+node_modules/
+.gradle/
+.cache/
+.config/
+.local/
+.npm/
+.bashrc
+.android/
+*.log

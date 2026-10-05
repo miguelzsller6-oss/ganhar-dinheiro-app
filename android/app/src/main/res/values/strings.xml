@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Ganhar Dinheiro</string>
+    <string name="title_activity_main">Ganhar Dinheiro</string>
+    <string name="package_name">com.ganhardinheiro.app</string>
+    <string name="custom_url_scheme">com.ganhardinheiro.app</string>
+</resources>

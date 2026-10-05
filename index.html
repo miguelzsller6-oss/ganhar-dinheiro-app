@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Ganhar Dinheiro</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+
+<!-- ==================== AUTENTICAÇÃO ==================== -->
+
+<div id="authScreen">
+
+    <div class="logo">
+        <h1>💰 Ganhar Dinheiro</h1>
+        <p>Assista, acumule pontos e troque por recompensas.</p>
+    </div>
+
+
+    <!-- LOGIN -->
+
+    <div id="loginBox" class="card">
+
+        <h2>Entrar</h2>
+
+        <input
+            type="email"
+            id="loginEmail"
+            placeholder="Seu email"
+            autocomplete="email"
+        >
+
+        <input
+            type="password"
+            id="loginPassword"
+            placeholder="Sua senha"
+            autocomplete="current-password"
+        >
+
+        <button onclick="entrar()">
+            Entrar
+        </button>
+
+        <p id="loginMessage"></p>
+
+        <p>
+            Ainda não tem conta?
+            <a href="#" onclick="mostrarCadastro(); return false;">
+                Criar conta
+            </a>
+        </p>
+
+    </div>
+
+
+    <!-- CADASTRO -->
+
+    <div id="registerBox" class="card hidden">
+
+        <h2>Criar conta</h2>
+
+        <input
+            type="text"
+            id="registerUsername"
+            placeholder="Nome de utilizador"
+            autocomplete="username"
+        >
+
+        <input
+            type="email"
+            id="registerEmail"
+            placeholder="Seu email"
+            autocomplete="email"
+        >
+
+        <input
+            type="password"
+            id="registerPassword"
+            placeholder="Criar senha"
+            autocomplete="new-password"
+        >
+
+        <button onclick="criarConta()">
+            Criar conta
+        </button>
+
+        <p id="registerMessage"></p>
+
+        <p>
+            Já tem conta?
+            <a href="#" onclick="mostrarLogin(); return false;">
+                Entrar
+            </a>
+        </p>
+
+    </div>
+
+
+    <!-- ADMIN -->
+
+    <div class="admin-access">
+
+        <button
+            class="admin-link"
+            onclick="mostrarAdmin()"
+        >
+            🛠️ Área Admin
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- ==================== APLICAÇÃO ==================== -->
+
+<div id="appScreen" class="hidden">
+
+    <header>
+
+        <div>
+
+            <h1>💰 Ganhar Dinheiro</h1>
+
+            <p id="welcomeUser">
+                Bem-vindo!
+            </p>
+
+        </div>
+
+        <button
+            class="logout-button"
+            onclick="sair()"
+        >
+            Sair
+        </button>
+
+    </header>
+
+
+    <main>
+
+        <!-- SALDO -->
+
+        <div class="balance-card">
+
+            <p>Seu saldo</p>
+
+            <h2 id="saldo">
+                0 MT
+            </h2>
+
+            <p id="pontos">
+                0 pontos
+            </p>
+
+        </div>
+
+
+        <!-- MENU -->
+
+        <div class="menu">
+
+            <button onclick="mostrarSecao('inicio')">
+                🏠 Início
+            </button>
+
+            <button onclick="mostrarSecao('videos')">
+                🎬 Assistir vídeos
+            </button>
+
+            <button onclick="mostrarSecao('recompensas')">
+                🎁 Recompensas
+            </button>
+
+            <button onclick="mostrarSecao('perfil')">
+                👤 Perfil
+            </button>
+
+            <button onclick="mostrarSecao('saque')">
+                💸 Sacar
+            </button>
+
+            <button onclick="mostrarSecao('historico')">
+                📋 Histórico
+            </button>
+
+          <button onclick="mostrarSecao('convites')">
+    👥 Convidar amigos
+          </button>
+
+        </div>
+
+
+        <!-- INÍCIO -->
+
+        <section
+            id="inicio"
+            class="section"
+        >
+
+            <div class="card">
+
+                <h2>👋 Bem-vindo!</h2>
+
+                <p>
+                    Ganhe pontos realizando atividades
+                    disponíveis no site e troque seus pontos
+                    por recompensas.
+                </p>
+
+                <button
+                    onclick="mostrarSecao('videos')"
+                >
+                    🎬 Começar a ganhar
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- VÍDEOS -->
+
+        <section
+            id="videos"
+            class="section hidden"
+        >
+
+            <div class="card">
+
+                <h2>🎬 Assistir vídeos</h2>
+
+                <p>
+                    Assista aos vídeos disponíveis para
+                    ganhar pontos.
+                </p>
+
+
+                <div class="video-demo">
+
+                    <div class="video-icon">
+                        ▶️
+                    </div>
+
+                    <p>
+                        Vídeo de demonstração
+                    </p>
+
+                </div>
+
+
+                <button
+                    id="btnAssistir"
+                    onclick="assistirVideo()"
+                >
+                    ▶️ Assistir e ganhar pontos
+                </button>
+
+
+                <p id="videoMessage"></p>
+
+            </div>
+
+        </section>
+
+
+        <!-- RECOMPENSAS -->
+
+        <section
+            id="recompensas"
+            class="section hidden"
+        >
+
+            <div class="card">
+
+                <h2>🎁 Recompensas</h2>
+
+                <p>
+                    Converta seus pontos em saldo.
+                </p>
+
+
+                <div class="reward">
+
+                    <strong>
+                        100 pontos
+                    </strong>
+
+                    <span>
+                        10 MT
+                    </span>
+
+                    <button
+                        onclick="converterPontos(100, 10)"
+                    >
+                        Trocar
+                    </button>
+
+                </div>
+
+
+                <div class="reward">
+
+                    <strong>
+                        500 pontos
+                    </strong>
+
+                    <span>
+                        50 MT
+                    </span>
+
+                    <button
+                        onclick="converterPontos(500, 50)"
+                    >
+                        Trocar
+                    </button>
+
+                </div>
+
+
+                <div class="reward">
+
+                    <strong>
+                        1000 pontos
+                    </strong>
+
+                    <span>
+                        100 MT
+                    </span>
+
+                    <button
+                        onclick="converterPontos(1000, 100)"
+                    >
+                        Trocar
+                    </button>
+
+                </div>
+
+
+                <p id="rewardMessage"></p>
+
+            </div>
+
+        </section>
+
+
+        <!-- PERFIL -->
+
+        <section
+            id="perfil"
+            class="section hidden"
+        >
+
+            <div class="card">
+
+                <h2>👤 Meu perfil</h2>
+
+
+                <p>
+                    <strong>
+                        Utilizador:
+                    </strong>
+
+                    <span id="profileUsername">
+                        -
+                    </span>
+                </p>
+
+
+                <p>
+                    <strong>
+                        Email:
+                    </strong>
+
+                    <span id="profileEmail">
+                        -
+                    </span>
+                </p>
+
+
+                <p>
+                    <strong>
+                        Pontos:
+                    </strong>
+
+                    <span id="profilePoints">
+                        0
+                    </span>
+                </p>
+
+
+                <p>
+                    <strong>
+                        Saldo:
+                    </strong>
+
+                    <span id="profileBalance">
+                        0 MT
+                    </span>
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- SAQUE -->
+
+        <section
+            id="saque"
+            class="section hidden"
+        >
+
+            <div class="card">
+
+                <h2>
+                    💸 Solicitar saque
+                </h2>
+
+
+                <p>
+                    Valor mínimo para saque:
+                    <strong>100 MT</strong>
+                </p>
+
+
+                <select id="metodoSaque">
+
+                    <option value="M-Pesa">
+                        M-Pesa
+                    </option>
+
+                    <option value="e-Mola">
+                        e-Mola
+                    </option>
+
+                </select>
+
+
+                <input
+                    type="text"
+                    id="numeroSaque"
+                    placeholder="Número da conta/telefone"
+                >
+
+
+                <input
+                    type="number"
+                    id="valorSaque"
+                    placeholder="Valor em MT"
+                    min="100"
+                >
+
+
+                <button
+                    onclick="solicitarSaque()"
+                >
+                    💸 Solicitar saque
+                </button>
+
+
+                <p id="saqueMessage"></p>
+
+            </div>
+
+        </section>
+
+
+        <!-- HISTÓRICO -->
+
+        <section
+            id="historico"
+            class="section hidden"
+        >
+
+            <div class="card">
+
+                <h2>
+                    📋 Histórico de saques
+                </h2>
+
+
+                <div id="historicoSaques">
+
+                    <p class="empty">
+                        Nenhum saque realizado.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- CONVITES -->
+
+        <section
+            id="convites"
+            class="section hidden"
+        >
+
+            <div class="card">
+
+                <h2>
+                    👥 Convidar amigos
+                </h2>
+
+                <p>
+                    Convide seus amigos e ganhe pontos!
+                </p>
+
+                <div class="invite-box">
+
+                    <p>
+                        Seu código de convite
+                    </p>
+
+                    <h2 id="codigoConvite">
+                        Gerando...
+                    </h2>
+
+                    <button onclick="copiarCodigoConvite()">
+                        📋 Copiar código
+                    </button>
+
+                    <button onclick="partilharConvite()">
+                        📤 Partilhar convite
+                    </button>
+
+                </div>
+
+
+                <div class="invite-stats">
+
+                    <p>
+                        👥 Amigos convidados:
+                        <strong id="totalConvites">0</strong>
+                    </p>
+
+                    <p>
+                        🎁 Pontos ganhos:
+                        <strong id="pontosConvite">0</strong>
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+      
+    </main>
+
+
+    <!-- RODAPÉ -->
+
+    <footer>
+
+        <a href="sobre.html">
+            Sobre
+        </a>
+
+        <a href="contacto.html">
+            Contacto
+        </a>
+
+        <a href="privacidade.html">
+            Privacidade
+        </a>
+
+        <a href="termos.html">
+            Termos
+        </a>
+
+        <br>
+
+
+        <button
+            class="admin-link"
+            onclick="mostrarAdmin()"
+        >
+            🛠️ Área Admin
+        </button>
+
+
+        <p>
+            © 2026 Ganhar Dinheiro
+        </p>
+
+    </footer>
+
+</div>
+
+
+<!-- ==================== ADMIN ==================== -->
+
+<div id="adminScreen" class="hidden">
+
+    <header class="admin-header">
+
+        <div>
+
+            <h1>
+                🛠️ Área Administrativa
+            </h1>
+
+            <p>
+                Painel de administração
+            </p>
+
+        </div>
+
+
+        <button
+            class="logout-button"
+            onclick="sairAdmin()"
+        >
+            Sair
+        </button>
+
+    </header>
+
+
+    <main>
+
+
+        <!-- LOGIN ADMIN -->
+
+        <div
+            id="adminLogin"
+            class="card"
+        >
+
+            <h2>
+                🔐 Acesso administrativo
+            </h2>
+
+            <p>
+                Entre com as credenciais de administrador.
+            </p>
+
+
+            <input
+                type="text"
+                id="adminUser"
+                placeholder="Utilizador"
+            >
+
+
+            <input
+                type="password"
+                id="adminPassword"
+                placeholder="Senha"
+            >
+
+
+            <button onclick="entrarAdmin()">
+                Entrar no painel
+            </button>
+
+
+            <p id="adminMessage"></p>
+
+        </div>
+
+
+        <!-- PAINEL ADMIN -->
+
+        <div
+            id="adminContent"
+            class="hidden"
+        >
+
+
+            <!-- ESTATÍSTICAS -->
+
+            <div class="admin-stats">
+
+    <div class="stat-card">
+        <strong id="adminTotalSaques">0</strong>
+        <span>Total de saques</span>
+    </div>
+
+    <div class="stat-card">
+        <strong id="adminPendentes">0</strong>
+        <span>Pendentes</span>
+    </div>
+
+    <div class="stat-card">
+        <strong id="adminPagos">0</strong>
+        <span>Pagos</span>
+    </div>
+
+    <div class="stat-card">
+        <strong id="adminRejeitados">0</strong>
+        <span>Rejeitados</span>
+    </div>
+
+    <div class="stat-card">
+        <strong id="adminValorPendente">0 MT</strong>
+        <span>Valor pendente</span>
+    </div>
+
+    <div class="stat-card">
+        <strong id="adminValorPago">0 MT</strong>
+        <span>Valor pago</span>
+    </div>
+
+    <div class="stat-card">
+        <strong id="adminValorRejeitado">0 MT</strong>
+        <span>Valor rejeitado</span>
+    </div>
+              <div class="stat-card finance-total">
+    <strong id="adminTotalSolicitado">0 MT</strong>
+    <span>💰 Total solicitado</span>
+</div>
+
+<div class="stat-card finance-pago">
+    <strong id="adminTotalPago">0 MT</strong>
+    <span>💸 Total pago</span>
+</div>
+
+<div class="stat-card finance-devolvido">
+    <strong id="adminTotalDevolvido">0 MT</strong>
+    <span>↩️ Total devolvido</span>
+</div>
+
+<div class="stat-card finance-pendente">
+    <strong id="adminTotalAguardando">0 MT</strong>
+    <span>⏳ Total aguardando</span>
+</div>
+              <div class="stat-card finance-utilizadores">
+    <strong id="adminTotalUtilizadores">0</strong>
+    <span>👥 Total de utilizadores</span>
+              </div>
+
+            </div>
+          <div class="stat-card finance-utilizadores">
+    <strong id="adminNovosHoje">0</strong>
+    <span>🆕 Novos hoje</span>
+</div>
+
+<div class="stat-card finance-utilizadores">
+    <strong id="adminNovos7Dias">0</strong>
+    <span>📅 Últimos 7 dias</span>
+</div>
+
+<div class="stat-card finance-utilizadores">
+    <strong id="adminNovos30Dias">0</strong>
+    <span>📆 Últimos 30 dias</span>
+</div>
+
+<div class="card admin-grafico">
+
+    <h2>📈 Crescimento de utilizadores</h2>
+
+    <p>Novos utilizadores nos últimos 7 dias</p>
+
+    <div id="graficoUtilizadores">
+        <p class="empty">A carregar gráfico...</p>
+    </div>
+
+</div>
+          <div class="card admin-financeiro-metodos">
+
+    <h2>💳 Resumo financeiro por método</h2>
+
+    <div class="metodo-financeiro">
+
+        <div class="metodo-card">
+            <h3>📱 M-Pesa</h3>
+
+            <p>
+                <strong id="mpesaSolicitado">0.00 MT</strong>
+                <span>Total solicitado</span>
+            </p>
+
+            <p>
+                <strong id="mpesaPago">0.00 MT</strong>
+                <span>Total pago</span>
+            </p>
+
+            <p>
+                <strong id="mpesaRejeitado">0.00 MT</strong>
+                <span>Total rejeitado</span>
+            </p>
+
+            <p>
+                <strong id="mpesaPendente">0.00 MT</strong>
+                <span>Total pendente</span>
+            </p>
+        </div>
+
+        <div class="metodo-card">
+
+            <h3>📱 e-Mola</h3>
+
+            <p>
+                <strong id="emolaSolicitado">0.00 MT</strong>
+                <span>Total solicitado</span>
+            </p>
+
+            <p>
+                <strong id="emolaPago">0.00 MT</strong>
+                <span>Total pago</span>
+            </p>
+
+            <p>
+                <strong id="emolaRejeitado">0.00 MT</strong>
+                <span>Total rejeitado</span>
+            </p>
+
+            <p>
+                <strong id="emolaPendente">0.00 MT</strong>
+                <span>Total pendente</span>
+            </p>
+
+        </div>
+
+    </div>
+
+          </div>
+            <!-- PEDIDOS -->
+
+            <div class="card">
+
+                <h2>
+                    📋 Pedidos de saque
+                </h2>
+
+        <div class="admin-filtros">
+
+    <h3>🔎 Procurar saques</h3>
+
+    <input
+        type="text"
+        id="adminPesquisa"
+        placeholder="Pesquisar utilizador, ID ou número..."
+        oninput="filtrarSaquesAdmin()"
+    >
+
+    <select
+        id="adminFiltroEstado"
+        onchange="filtrarSaquesAdmin()"
+    >
+        <option value="Todos">📋 Todos os saques</option>
+        <option value="Pendente">🟠 Pendentes</option>
+        <option value="Pago">🟢 Pagos</option>
+        <option value="Rejeitado">🔴 Rejeitados</option>
+    </select>
+
+    <select
+        id="adminFiltroMetodo"
+        onchange="filtrarSaquesAdmin()"
+    >
+        <option value="Todos">💳 Todos os métodos</option>
+        <option value="M-Pesa">📱 M-Pesa</option>
+        <option value="e-Mola">📱 e-Mola</option>
+    </select>
+
+    <button
+        type="button"
+        onclick="limparFiltrosAdmin()"
+        class="btn-limpar-filtros"
+    >
+        🔄 Limpar filtros
+    </button>
+
+        </div>
+              <div class="admin-metodos">
+
+    <h3>📱 Resumo por método</h3>
+
+    <div class="metodo-card">
+        <strong id="adminMPesaQtd">0</strong>
+        <span>📱 M-Pesa</span>
+        <small id="adminMPesaValor">0 MT</small>
+    </div>
+
+    <div class="metodo-card">
+        <strong id="adminEMolaQtd">0</strong>
+        <span>📱 e-Mola</span>
+        <small id="adminEMolaValor">0 MT</small>
+    </div>
+
+              </div>
+                <div id="adminSaques">
+
+                    <p class="empty">
+                        Nenhum pedido encontrado.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- AVISO -->
+
+        <div class="notice">
+
+            <strong>
+                ⚠️ Importante
+            </strong>
+
+            <p>
+                O sistema está sendo conectado a um
+                banco de dados online através do Supabase.
+                A autenticação dos utilizadores será feita
+                pelo Supabase Auth.
+            </p>
+
+        </div>
+
+    </main>
+
+
+    <footer>
+
+        <p>
+            © 2026 Ganhar Dinheiro — Administração
+        </p>
+
+    </footer>
+
+</div>
+
+
+<!-- ==================== JAVASCRIPT ==================== -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="script.js"></script>
+
+</body>
+</html>
